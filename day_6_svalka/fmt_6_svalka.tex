@@ -1,0 +1,520 @@
+% arara: xelatex
+\documentclass[11pt]{article} % размер шрифта
+\usepackage{libertine}
+
+\usepackage{tikz} % картинки в tikz
+\usepackage{microtype} % свешивание пунктуации
+
+\usepackage{array} % для столбцов фиксированной ширины
+
+\usepackage{indentfirst} % отступ в первом параграфе
+
+\usepackage{multicol} % текст в несколько колонок
+\usepackage{verbatim}
+
+\graphicspath{{images/}} % путь к картинкам
+
+\usepackage{sectsty} % для центрирования названий частей
+\allsectionsfont{\centering} % приказываем центрировать все sections
+
+\usepackage{amsmath, amssymb} % куча стандартных математических плюшек
+
+\usepackage[top=1cm, left=1cm, right=1cm, bottom=1cm]{geometry} % размер текста на странице
+
+\usepackage{lastpage} % чтобы узнать номер последней страницы
+
+\usepackage{enumitem} % дополнительные плюшки для списков
+%  например \begin{enumerate}[resume] позволяет продолжить нумерацию в новом списке
+\usepackage{caption} % подписи к картинкам без плавающего окружения figure
+
+\usepackage{circuitikz} % для рисовки электрических цепей
+
+% \usepackage{physics} % do not use it!
+
+\usepackage{fancyhdr} % весёлые колонтитулы
+\pagestyle{empty}
+%\lhead{ФМТ}
+%\chead{}
+%\rhead{КЛШ-2019}
+%\lfoot{}
+%\cfoot{}
+%\rfoot{\thepage/\pageref{LastPage}}
+%\renewcommand{\headrulewidth}{0.4pt}
+%\renewcommand{\footrulewidth}{0.4pt}
+
+
+
+\usepackage{todonotes} % для вставки в документ заметок о том, что осталось сделать
+% \todo{Здесь надо коэффициенты исправить}
+% \missingfigure{Здесь будет картина Последний день Помпеи}
+% команда \listoftodos — печатает все поставленные \todo'шки
+
+\usepackage{booktabs} % красивые таблицы
+% заповеди из документации:
+% 1. Не используйте вертикальные линии
+% 2. Не используйте двойные линии
+% 3. Единицы измерения помещайте в шапку таблицы
+% 4. Не сокращайте .1 вместо 0.1
+% 5. Повторяющееся значение повторяйте, а не говорите "то же"
+
+\usepackage{fontspec} % поддержка разных шрифтов
+\usepackage{polyglossia} % поддержка разных языков
+
+\setmainlanguage{russian}
+\setotherlanguages{english}
+
+% \setmainfont{Linux Libertine O} % выбираем шрифт
+% можно также попробовать Helvetica, Arial, Cambria и т.Д.
+% перешли на \usepackage{libertine}
+
+% чтобы использовать шрифт Linux Libertine на личном компе,
+% его надо предварительно скачать по ссылке
+% http://www.linuxlibertine.org/
+
+% \newfontfamily{\cyrillicfonttt}{Linux Libertine O}
+% пояснение зачем нужно шаманство с \newfontfamily
+% http://tex.stackexchange.com/questions/91507/
+
+\AddEnumerateCounter{\asbuk}{\russian@alph}{щ} % для списков с русскими буквами
+\setlist[enumerate, 2]{label=\asbuk*),ref=\asbuk*} % списки уровня 2 будут буквами а) б) ...
+
+
+% делаем короче интервал в списках
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+
+
+\newcommand{\shortname}{ФМТ: свалка}
+
+\newcommand{\judgenormal}{\textbf{TOP SECRET!!! Судейский экземпляр!!!} \hspace*{1cm} \textbf{\shortname} \hspace*{1cm} \textbf{Обычные столы}}
+\newcommand{\judgetop}{\textbf{TOP SECRET!!! Судейский экземпляр!!!} \hspace*{1cm} \textbf{\shortname} \hspace*{1cm} \textbf{top-3 столы}}
+
+\newcommand{\putlogo}{
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale=0.05]{../klsh_logos/klsh_logo_2.png} &
+\raisebox{1cm}{
+    {\Large\bf \shortname \hspace*{8cm} КЛШ $7^2$}
+}
+\end{tabular}
+\end{center}
+}
+
+\newcommand{\judgenotes}{
+    За одну итерацию оппонирования можно получить максимум 1 балл. 
+    Вольные стрелки приносят команде от 0 до 3 баллов. 
+    Штрафы за выход за три минуты при решении своей задачи: от 0 до 30 секунд — 1 балл штрафа, 
+    от 30 до 60 секунд — 2 балла штрафа и далее 3 балла штрафа.
+}
+
+
+\newcommand{\problemA}{
+Серёжа Ламзин встал у самой высокой сосны КЛШ и сначала прошёл
+10 метров одном направлении, затем 20 метров в другом направлении, затем 30 метров в третьем направлении и затем 40 метров в четвёртом направлении. 
+Там Серёжа и зарыл сундук со своими оладушками.
+Серёжа помнит, что шёл, и на юг, и на север, и на запад, и на восток,
+но не помнит, в каком порядке. 
+Сейчас Серёжа снова находится с компасом у той самой сосны. 
+Какое наименьшее количество ям ему нужно выкопать, чтобы наверняка найти сундук с оладушками?
+
+
+% Тима Спрыжков загадал своё самое любимое натуральное число. 
+% Затем поделил его на $7$ и затем прибавил $42$.
+% Снова поделил результат на $7$ и затем прибавил $42$.
+% В третий раз поделил результат на $7$ и затем прибавил $42$.
+% В четвёртый раз поделил результат на $7$ и затем прибавил $42$.
+% В итоге у Тимы вышло его любимое натуральное число.
+% Какое число нравится Тиме?
+}
+
+
+\newcommand{\solutionA}{
+Разбиваем на пары по разностям, получаем $4 + 4 + 4 + 4 = 16$. За попытку перебора с ответом от 10 до 22 — 1 балл. 
+За разбиение пар на три подмножества в зависимости от разницы — $2$ балла. 
+Написано только $4! = 24$ — 0 баллов. 
+%Находим неподвижную точку $x/7 + 42 = x$, $x = 49$.
+}
+
+
+\newcommand{\problemB}{
+В прямоугольном треугольнике сумма катетов равна $k$, а гипотенуза равна $g$.
+Найди радиус вписанной в треугольник окружности.
+
+% Школьник, помни, что в этой задаче $g$ может отличаться от $9.8$!
+%В треугольнике $\Delta ABC$ на стороне $AB$ отложена точка $M$, а на стороне $BC$ — точка $K$.
+%Отрезки $MK$ и $AC$ параллельны, $AC = 36$, $S_{\Delta MBK} = S_{\Delta MKCA}$.
+
+%Найди $MK$.
+}
+\newcommand{\solutionB}{
+Точки касания окружности отсекают на сторонах отрезки $r$, $x$ и $y$:
+\[
+\begin{cases}
+    (r + x) + (r + y) = k \\
+    x + y = g    
+\end{cases}
+\]
+Отсюда $r = (k - g) / 2$. Ответ $k - g$ — 1 балл. Верная картинка с разбиением на кусочки и ересь дальше — 1 балл. 
+Если школьник ссылается на известность формул про полупериметр — не штрафуем.
+%Большой и маленький треугольники подобны с коэффициентом подобия равным $\sqrt{2}$.
+%Ответ, $36/\sqrt{2}$.
+}
+
+
+
+\newcommand{\problemC}{
+К источнику последовательно через реостат подключен вольтметр. 
+Директор КЛШ-49 Лиза М. оперативным и умелым вмешательством уменьшила сопротивление реостата втрое. 
+При этом показания вольтметра вдвое выросли. 
+Найди отношение сопротивления реостата к сопротивлению всей цепи до действий Лизы М.
+
+% Во сколько раз изменятся показания вольтметра, если сопротивление реостата уменьшить до нуля?
+}
+\newcommand{\solutionC}{
+Обозначим $R_v$ — сопротивление вольтметра, $R$ — исходное сопротивление реостата, $r$ — сопротивление источника. 
+Закон Ома, $I = \varepsilon / (r + R + R_v)$.
+Исходные показания вольтметра, $V = I \cdot R_v = \varepsilon R_v / (r + R + R_v)$.
+Уравнение, отражающее непременную правильность действий дирекции КЛШ-49,
+\[
+2\frac{\varepsilon R_v}{r + R + R_v} = \frac{\varepsilon R_v}{r + R/3 + R_v}
+\]
+Ответ, $R/(r + R + R_v) = 3/4$. Решение с $r = 0$ и верным ответом — 3 балла. Решение с $R_v = \infty$ или $R_v = 0$ и неверным ответом — 0 баллов. 
+Решение с $R_v = 0$ и верным ответом из-за сокращающейся ереси в уравнении — $1$ балл. Верное уравнение и ошибка в счёте далее — $2$ балла. 
+}
+
+\newcommand{\problemD}{
+К потолку и стенке ящика, находящегося на горизонтальной поверхности, подвесили рыбную котлету массой $m$ на двух нитях. 
+Нити составляют углы $\alpha = 30^{\circ}$ со стенкой и $\beta = 30^{\circ}$ с дном ящика.
+Система находится в равновесии.
+
+\includegraphics[width=.2\textwidth]{Svalka.png}
+
+Определи силу натяжения $T_1$ первой нити. 
+}
+
+\newcommand{\solutionD}{
+Условие равновесия по двум координатам:
+\[
+\begin{cases}
+    mg + T_1 \sin\alpha = T_2 \cos \beta \\
+    T_2 \sin\beta = T_1 \cos \alpha.
+\end{cases}
+\]
+Решаем систему:
+\[
+T_1 = \frac{mg\sin\beta}{\cos\alpha\cos\beta - \sin\alpha\sin\beta}, \quad 
+T_2 = \frac{mg\cos\alpha}{\cos\alpha\cos\beta - \sin\alpha\sin\beta}
+\]
+Для указанных углов: $T_1 = mg$, $T_2 = \sqrt{3} mg$. Верная система с ошибкой далее — 2 балла. Найдены оба $T_1$, $T_2$ — 3 балла, найдено только $T_2$ — 2 балла. 
+}
+
+
+
+
+\newcommand{\protocol}[2]{
+\putlogo
+
+{\Large Команда: #1 \hspace*{2cm} Судья: #2
+}
+\vspace*{1cm}
+
+\begin{tabular}{ | p{2cm} | p{4cm} | p{4cm} |}
+    \hline
+    Задача & Время заявки & Балл \\
+    \hline
+    1 & &  \\ [2.1cm]
+    \hline
+    2 & &  \\ [2.1cm]
+    \hline
+    3 & &  \\ [2.1cm]
+    \hline
+    4 & &  \\ [2.1cm]
+    \hline
+\end{tabular}
+\vspace*{0.5cm}
+
+\begin{itemize}
+    \item Судья! Первым делом фиксируй время заявки задачи в протоколе и на отдельной бумажке.
+    \item Запиши на бумажку команду, время и балл за задачу. Продублируй информацию в протокол. Передай бумажку ласточке. 
+    \item Задачи заявляют письменно.
+    \item Каждую задачу можно заявить только один раз. 
+    \item При сомнениях после получения решения можно попросить команду дать письменный дополнительный комментарий к решению.
+    Не злоупотребляй этим.    
+\end{itemize}
+
+
+Начисление баллов:
+
+\begin{itemize}
+    \item если задача решена на 0 баллов или не заявлена к окончанию тура, команда получает 1200 штрафных секунд = 20 штрафных минут;
+    \item если задача заявлена через $T$ секунд от начала и решена на $b>0$ баллов, команда получает $T/b$ штрафных секунд.
+\end{itemize}
+
+}
+
+
+
+
+
+
+\newcommand{\problemAA}{
+\problemA
+}
+\newcommand{\solutionAA}{
+\solutionA
+}
+
+
+
+
+\newcommand{\problemBB}{
+Коля Гулицкий вписал в окружность квадрат $ABCD$, провёл в нём диагональ $BD$ 
+и отложил на окружности точку $E$ на дуге $AD$ так, что $\angle ECD = 15^{\circ}$.
+
+Диагональ $BD$ пересекает отрезок $CE$ в точке $K$. Найди $KE / CK$.
+}
+
+\newcommand{\solutionBB}{
+Шаг 1. Находим все углы. 
+
+Шаг 2. Замечаем подобие $\Delta ECD \sim \Delta DCK$ и $EC/DC = CD/ CK$.
+
+Шаг 3. Пишем теорему синусов для $\Delta CDK$:
+\[
+CD / CK = \sin 120^{\circ} / \sin 45^{\circ} = \sqrt{3/2}.
+\]
+
+Шаг 4. 
+\[
+\frac{KE}{CK} = \frac{CE - CK}{CK} = \frac{CE}{CK} - 1 = \frac{CE}{CD}\frac{CD}{CK}- 1 = 3/2 - 1 = 1/2.
+\]
+}
+
+
+\newcommand{\problemCC}{
+\problemC
+}
+
+\newcommand{\solutionCC}{
+\solutionC
+}
+
+
+
+
+\newcommand{\problemDD}{
+Легкий однородный стержень длины $\ell$ свободно висит, касаясь нижним концом поверхности воды. 
+Верхний конец стержня шарнирно закреплен. 
+Уровень воды поднялся на высоту $h < \ell$. 
+После подъёма воды стержень отклонился от вертикали на угол $\beta$. 
+
+Найди отношение плотности воды к плотности стержня. 
+    }
+
+\newcommand{\solutionDD}{
+Длина части стержня в воде:
+\[
+x = \ell - (\ell - h) /\cos \beta
+\]    
+Стержень закреплен в точке $O$, $B$ — второй конец стержня, $A$ — точка касания воды,
+$C$ — центр масс части, погруженной в воду.
+Плечо силы Архимеда:
+\[
+OC = OA + AC = \frac{\ell - h}{\cos \beta} + \frac{x}{2} = \frac{\ell}{2} + \frac{\ell - h}{2\cos\beta}
+\]
+Равенство моментов сил относительно $O$:
+\[
+mg \frac{\ell}{2}\sin \beta = F_{\text{arch}}OC \sin \beta.
+\]
+Подставляем $m = \rho_{\text{st}} S \ell$, $F_{\text{arch}} = \rho_w S x$:
+\[
+\rho_{\text{st}} \ell^2 /2 = \rho_w OC \cdot x.
+\]
+Отсюда
+\[
+\frac{\rho_w}{\rho_{\text{st}}} = \frac{\ell^2}{2OC\cdot x}=\dots = \frac{\ell^2 \cos^2 \beta}{h^2 - \ell^2 \sin^2 \beta}
+\]
+}
+
+
+\newcommand{\judgenormalpage}{
+\judgenormal
+
+%\begin{small}
+    %\judgenotes
+%\end{small}
+
+\begin{enumerate}
+    \item \problemA
+    
+    \solutionA
+    \item \problemB
+    
+    \solutionB
+    \item \problemC
+    
+    \solutionC
+    \item \problemD
+    
+    \solutionD
+\end{enumerate}
+}
+
+\newcommand{\judgetoppage}{
+\judgetop
+
+\begin{small}
+    \judgenotes
+\end{small}
+
+\begin{enumerate}
+    \item \problemAA
+    
+    \solutionAA
+    \item \problemBB
+    
+    \solutionBB
+    \item \problemCC
+    
+    \solutionCC
+    \item \problemDD
+    
+    \solutionDD
+\end{enumerate}
+}
+
+
+\newcommand{\studentnormalpage}{
+\putlogo
+
+\begin{enumerate}
+    \item \problemA
+    \item \problemB
+    \item \problemC
+    \item \problemD
+\end{enumerate}
+}
+
+\newcommand{\studenttoppage}{
+\putlogo
+
+\begin{enumerate}
+    \item \problemAA
+    \item \problemBB
+    \item \problemCC
+    \item \problemDD
+\end{enumerate}        
+}
+
+
+\begin{document}
+
+% \newpage
+\judgenormalpage
+
+\newpage
+\judgenormalpage
+
+
+\newpage % школьный экземпляр обычных столов
+\studentnormalpage
+
+\vfill
+
+\studentnormalpage
+
+
+
+
+
+
+\newpage
+\protocol{$\alpha$}{Рома Лисин}
+
+\newpage
+\protocol{$\beta$}{Витя Зелинский}
+
+\newpage
+\protocol{$\gamma$}{Макс Федянов, Павел Рябенко}
+
+\newpage
+\protocol{$\delta$}{Тима Спрыжков}
+
+\newpage
+\protocol{$\eta$}{Роберт Гринштейн}
+
+\newpage
+\protocol{$\theta$}{Коля Гулицкий}
+
+\newpage
+\protocol{$\varepsilon$}{Ян Шапиро}
+
+\newpage
+\protocol{$\lambda$}{Вера Михеева}
+
+\newpage
+\protocol{$\kappa$}{Марина Хмельницкая}
+
+\newpage
+\protocol{$\mu$}{Егор Лунёв}
+
+\newpage
+\protocol{$\nu$}{Даня Снегур}
+
+\newpage
+\protocol{$o$}{Андрей Трегубович}
+
+\newpage
+\protocol{$\pi$}{Саша Тимошков}
+ 
+\newpage
+\protocol{$\rho$}{Егор Скурковин}
+
+\newpage
+\protocol{$\sigma$}{Настя Судницына}
+
+\newpage
+\protocol{$\phi$}{Вова Тимофеев}
+
+\newpage
+\protocol{$\psi$}{Майдуров Артём}
+
+\newpage
+\protocol{$\chi$}{Антонина Шарковская}
+
+\newpage
+\protocol{$\xi$}{Вова Фёдоров}
+
+\newpage
+\protocol{$\iota$}{Влад Сидельников}
+
+\newpage
+\protocol{$\tau$}{Слава Шестаков, Всеволод Кабриц}
+
+\newpage
+\protocol{$\omega$}{Михаил Красков, Полина Смирнова}
+
+
+
+\end{document} %% если деления задач по столам нет
+
+
+\newpage 
+\judgetoppage
+
+\newpage 
+\judgetoppage
+
+
+\newpage %% школьный экземпляр top3 столов
+\studenttoppage
+
+\vfill
+
+\studenttoppage
+
+
+\end{document}
+
+

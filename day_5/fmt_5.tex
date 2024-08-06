@@ -1,0 +1,374 @@
+% arara: xelatex
+\documentclass[11pt]{article} % размер шрифта
+\usepackage{libertine}
+
+\usepackage{tikz} % картинки в tikz
+\usepackage{microtype} % свешивание пунктуации
+
+\usepackage{array} % для столбцов фиксированной ширины
+
+\usepackage{indentfirst} % отступ в первом параграфе
+
+\usepackage{multicol} % текст в несколько колонок
+\usepackage{verbatim}
+
+\graphicspath{{images/}} % путь к картинкам
+
+\usepackage{sectsty} % для центрирования названий частей
+\allsectionsfont{\centering} % приказываем центрировать все sections
+
+\usepackage{amsmath, amssymb} % куча стандартных математических плюшек
+
+\usepackage[top=1cm, left=1cm, right=1cm, bottom=1cm]{geometry} % размер текста на странице
+
+\usepackage{lastpage} % чтобы узнать номер последней страницы
+
+\usepackage{enumitem} % дополнительные плюшки для списков
+%  например \begin{enumerate}[resume] позволяет продолжить нумерацию в новом списке
+\usepackage{caption} % подписи к картинкам без плавающего окружения figure
+
+\usepackage{circuitikz} % для рисовки электрических цепей
+
+% \usepackage{physics} % do not use it!
+
+\usepackage{fancyhdr} % весёлые колонтитулы
+\pagestyle{empty}
+%\lhead{ФМТ}
+%\chead{}
+%\rhead{КЛШ-2019}
+%\lfoot{}
+%\cfoot{}
+%\rfoot{\thepage/\pageref{LastPage}}
+%\renewcommand{\headrulewidth}{0.4pt}
+%\renewcommand{\footrulewidth}{0.4pt}
+
+
+
+\usepackage{todonotes} % для вставки в документ заметок о том, что осталось сделать
+% \todo{Здесь надо коэффициенты исправить}
+% \missingfigure{Здесь будет картина Последний день Помпеи}
+% команда \listoftodos — печатает все поставленные \todo'шки
+
+\usepackage{booktabs} % красивые таблицы
+% заповеди из документации:
+% 1. Не используйте вертикальные линии
+% 2. Не используйте двойные линии
+% 3. Единицы измерения помещайте в шапку таблицы
+% 4. Не сокращайте .1 вместо 0.1
+% 5. Повторяющееся значение повторяйте, а не говорите "то же"
+
+\usepackage{fontspec} % поддержка разных шрифтов
+\usepackage{polyglossia} % поддержка разных языков
+
+\setmainlanguage{russian}
+\setotherlanguages{english}
+
+% \setmainfont{Linux Libertine O} % выбираем шрифт
+% можно также попробовать Helvetica, Arial, Cambria и т.Д.
+% перешли на \usepackage{libertine}
+
+% чтобы использовать шрифт Linux Libertine на личном компе,
+% его надо предварительно скачать по ссылке
+% http://www.linuxlibertine.org/
+
+% \newfontfamily{\cyrillicfonttt}{Linux Libertine O}
+% пояснение зачем нужно шаманство с \newfontfamily
+% http://tex.stackexchange.com/questions/91507/
+
+\AddEnumerateCounter{\asbuk}{\russian@alph}{щ} % для списков с русскими буквами
+\setlist[enumerate, 2]{label=\asbuk*),ref=\asbuk*} % списки уровня 2 будут буквами а) б) ...
+
+
+% делаем короче интервал в списках
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+
+
+\newcommand{\shortname}{ФМТ: тур 5}
+
+\newcommand{\judgenormal}{\textbf{TOP SECRET!!! Судейский экземпляр!!!} \hspace*{1cm} \textbf{\shortname} \hspace*{1cm} \textbf{Обычные столы}}
+\newcommand{\judgetop}{\textbf{TOP SECRET!!! Судейский экземпляр!!!} \hspace*{1cm} \textbf{\shortname} \hspace*{1cm} \textbf{top-3 столы}}
+
+\newcommand{\putlogo}{
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale=0.05]{../klsh_logos/klsh_logo_2.png} &
+\raisebox{1cm}{
+    {\Large\bf \shortname \hspace*{8cm} КЛШ $7^2$}
+}
+\end{tabular}
+\end{center}
+}
+
+\newcommand{\judgenotes}{
+    За одну итерацию оппонирования можно получить максимум 1 балл. 
+    Вольные стрелки приносят команде от 0 до 3 баллов. 
+    Штрафы за выход за три минуты при решении своей задачи: от 0 до 30 секунд — 1 балл штрафа, 
+    от 30 до 60 секунд — 2 балла штрафа и далее 3 балла штрафа.
+}
+
+
+\newcommand{\problemA}{
+Даня Снегур на кресельной канатной дороге поднимается на заснеженную гору, чтобы скатиться на горных лыжах. 
+Даня считает каждое второе кресло, проплывающее ему на встречу. 
+Всего на подъёмном канате прикреплено 99 кресел на равных интервалах.
+
+Сколько кресел мог насчитать Даня за весь подъём?
+}
+
+
+\newcommand{\solutionA}{
+Мимо Дани проплыли все кресла кроме его собственного, то есть $98$.
+Ответ: $98 / 2 = 49$.
+
+Просто деление $99$ на $2$ без вычитания своего кресла: $2$ балла за округления до $49$ и $1$ балл за округление до $50$.
+}
+
+
+\newcommand{\problemB}{
+Серёже Ламзину в КЛШ-49 снова приснилась трапеция $ABCD$ с основанием $AD$.
+Её диагонали пересекались в точке $M$, а площади треугольников, отсекаемых диагоналями и основаниями, были равны $S_{BCM} = 16$ и $S_{AMD}  = 9$.
+Найди площадь трапеции. 
+}
+\newcommand{\solutionB}{
+Проведём прямую параллельно одной из диагоналей. 
+Площадь полученного большого треугольника равна площади трапеции. 
+Отсекаемые треугольники подобны с коэффициентом $k = \sqrt{S_2 / S_1}$.
+Большой треугольник подобен отсекаемому с коэффициентом $(k + 1) / k$.
+Отсюда, $S = S_2 ((k + 1) / k)^2 = (\sqrt{S_1} + \sqrt{S_2})^2 = 49$. 
+}
+
+% \newcommand{\hardmath}{
+% Двадцать четыре команды КЛШ-2023 поделили между собой все натуральные числа. 
+% Оказалось, что числа доставшиеся каждой команде — это бесконечная арифметическая прогрессия. 
+
+% Найди сумму величин, обратных разностям этих арифметических прогрессий. 
+% }
+% \newcommand{\solhardmath}{
+% Возьмём большое $n$ и посмотрим, какую долю этого ряда получила команда с разностью $d$.
+% Замечаем, что выбрав достаточно большое $n$, можно сколь угодно приблизить долю к $1/d$. 
+
+% Все натуральные числа полностью поделены между командами, 
+% поэтому сумма $1/d_{\alpha} + \ldots + 1/d_{\omega} = 1$. 
+
+% Угадан ответ 1 на примере частного случая: 0 баллов и переход. 
+% }
+
+
+\newcommand{\problemC}{
+Вика Луковская бежала по круглому стадиону радиуса $r$, с постоянной по модулю скоростью $v$. 
+Через время~$t$ от старта, ещё не пробежав полного круга, Вика задумалась, чему равна её средняя скорость перемещения.
+Помоги Вике найти желаемое. 
+}
+\newcommand{\solutionC}{
+\[
+v_{\text{ср}} = L/t =  \frac{2r \sin(\phi/2)}{t} = \frac{2r \sin(vt/(2r))}{t}.
+\]
+}
+
+\newcommand{\problemD}{
+Ваня Сапогов и Ваня Адо тянут невесомую нерастяжимую абсолютно чёрную веревку в разные стороны, прикладывая к ней силы $F$ каждый. 
+Веревка выдерживает подвешенный к ней груз массой до 15 кг. 
+При каких значениях $F$ верёвка не порвётся?
+}
+
+\newcommand{\solutionD}{
+По второму закону Ньютона, у верёвки, находящейся в равновесии, силы слева и справа равны по модулю. 
+Верёвка выдерживает $F = mg = 15 \cdot 10 = 150$ Н. 
+Верёвка нерастяжимая, в каждой точке нить натянута одинаково. 
+
+Ответы $75$ Н и $300$ Н означают 0 за задачу и переход.
+}
+
+
+
+
+
+\newcommand{\problemAA}{
+\problemA
+}
+\newcommand{\solutionAA}{
+\solutionA
+}
+
+
+
+
+\newcommand{\problemBB}{
+Коля Гулицкий вписал в окружность квадрат $ABCD$, провёл в нём диагональ $BD$ 
+и отложил на окружности точку $E$ на дуге $AD$ так, что $\angle ECD = 15^{\circ}$.
+
+Диагональ $BD$ пересекает отрезок $CE$ в точке $K$. Найди $KE / CK$.
+}
+
+\newcommand{\solutionBB}{
+Шаг 1. Находим все углы. 
+
+Шаг 2. Замечаем подобие $\Delta ECD \sim \Delta DCK$ и $EC/DC = CD/ CK$.
+
+Шаг 3. Пишем теорему синусов для $\Delta CDK$:
+\[
+CD / CK = \sin 120^{\circ} / \sin 45^{\circ} = \sqrt{3/2}.
+\]
+
+Шаг 4. 
+\[
+\frac{KE}{CK} = \frac{CE - CK}{CK} = \frac{CE}{CK} - 1 = \frac{CE}{CD}\frac{CD}{CK}- 1 = 3/2 - 1 = 1/2.
+\]
+}
+
+
+\newcommand{\problemCC}{
+\problemC
+}
+
+\newcommand{\solutionCC}{
+\solutionC
+}
+
+
+
+
+\newcommand{\problemDD}{
+Легкий однородный стержень длины $\ell$ свободно висит, касаясь нижним концом поверхности воды. 
+Верхний конец стержня шарнирно закреплен. 
+Уровень воды поднялся на высоту $h < \ell$. 
+После подъёма воды стержень отклонился от вертикали на угол $\beta$. 
+
+Найди отношение плотности воды к плотности стержня. 
+    }
+
+\newcommand{\solutionDD}{
+Длина части стержня в воде:
+\[
+x = \ell - (\ell - h) /\cos \beta
+\]    
+Стержень закреплен в точке $O$, $B$ — второй конец стержня, $A$ — точка касания воды,
+$C$ — центр масс части, погруженной в воду.
+Плечо силы Архимеда:
+\[
+OC = OA + AC = \frac{\ell - h}{\cos \beta} + \frac{x}{2} = \frac{\ell}{2} + \frac{\ell - h}{2\cos\beta}
+\]
+Равенство моментов сил относительно $O$:
+\[
+mg \frac{\ell}{2}\sin \beta = F_{\text{arch}}OC \sin \beta.
+\]
+Подставляем $m = \rho_{\text{st}} S \ell$, $F_{\text{arch}} = \rho_w S x$:
+\[
+\rho_{\text{st}} \ell^2 /2 = \rho_w OC \cdot x.
+\]
+Отсюда
+\[
+\frac{\rho_w}{\rho_{\text{st}}} = \frac{\ell^2}{2OC\cdot x}=\dots = \frac{\ell^2 \cos^2 \beta}{h^2 - \ell^2 \sin^2 \beta}
+\]
+}
+
+
+\newcommand{\judgenormalpage}{
+\judgenormal
+
+\begin{small}
+    \judgenotes
+\end{small}
+
+\begin{enumerate}
+    \item \problemA
+    
+    \solutionA
+    \item \problemB
+    
+    \solutionB
+    \item \problemC
+    
+    \solutionC
+    \item \problemD
+    
+    \solutionD
+\end{enumerate}
+}
+
+\newcommand{\judgetoppage}{
+\judgetop
+
+\begin{small}
+    \judgenotes
+\end{small}
+
+\begin{enumerate}
+    \item \problemAA
+    
+    \solutionAA
+    \item \problemBB
+    
+    \solutionBB
+    \item \problemCC
+    
+    \solutionCC
+    \item \problemDD
+    
+    \solutionDD
+\end{enumerate}
+}
+
+
+\newcommand{\studentnormalpage}{
+\putlogo
+
+\begin{enumerate}
+    \item \problemA
+    \item \problemB
+    \item \problemC
+    \item \problemD
+\end{enumerate}
+}
+
+\newcommand{\studenttoppage}{
+\putlogo
+
+\begin{enumerate}
+    \item \problemAA
+    \item \problemBB
+    \item \problemCC
+    \item \problemDD
+\end{enumerate}        
+}
+
+
+\begin{document}
+
+% \newpage
+\judgenormalpage
+
+\newpage
+\judgenormalpage
+
+
+\newpage % школьный экземпляр обычных столов
+\studentnormalpage
+
+\vfill
+
+\studentnormalpage
+
+% \end{document} %% если деления задач по столам нет
+
+
+\newpage 
+\judgetoppage
+
+\newpage 
+\judgetoppage
+
+
+\newpage %% школьный экземпляр top3 столов
+\studenttoppage
+
+\vfill
+
+\studenttoppage
+
+
+\end{document}
+
+
